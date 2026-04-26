@@ -1,0 +1,236 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<section class="order-checkout-page">
+    <div class="container">
+        <div class="breadcrumb-nav order-checkout-breadcrumb">
+            <a href="{% url 'main:home' %}">Home</a>
+            <span>/</span>
+            <a href="{% url 'cart:cart_detail' %}">Cart</a>
+            <span>/</span>
+            <span class="current">Checkout</span>
+        </div>
+
+        <div class="order-checkout-hero">
+            <div>
+                <span class="order-checkout-badge">Secure checkout</span>
+                <h1 class="order-checkout-title">Complete Your Order</h1>
+                <p class="order-checkout-subtitle">
+                    Finish your purchase in one smooth step. Your cart is ready, shipping is fast, and payment stays secure.
+                </p>
+            </div>
+            <div class="order-checkout-hero-card">
+                <div class="order-checkout-hero-icon">
+                    <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <div>
+                    <h4>Fast payment flow</h4>
+                    <p>Review your items, confirm delivery details, and continue to payment.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-checkout-layout">
+            <div class="order-checkout-form-panel">
+                <div class="order-panel-header">
+                    <h2>Delivery Details</h2>
+                    <p>Use your account information or update it before placing the order.</p>
+                </div>
+
+                <form method="post" class="order-checkout-form">
+                    {% csrf_token %}
+
+
+                    {% if form.non_field_errors %}
+                        <div class="order-form-alert">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="order-form-grid">
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.first_name.html_name }}"
+                                id="{{ form.first_name.id_for_label }}"
+                                value="{{ form.first_name.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Enter your first name"
+                            >
+                            {% if form.first_name.errors %}
+                                <span class="form-error">{{ form.first_name.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.last_name.html_name }}"
+                                id="{{ form.last_name.id_for_label }}"
+                                value="{{ form.last_name.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Enter your last name"
+                            >
+                            {% if form.last_name.errors %}
+                                <span class="form-error">{{ form.last_name.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                            <input
+                                type="email"
+                                name="{{ form.email.html_name }}"
+                                id="{{ form.email.id_for_label }}"
+                                value="{{ form.email.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Enter your email"
+                            >
+                            {% if form.email.errors %}
+                                <span class="form-error">{{ form.email.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.phone_number.id_for_label }}">{{ form.phone_number.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.phone_number.html_name }}"
+                                id="{{ form.phone_number.id_for_label }}"
+                                value="{{ form.phone_number.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Enter your phone number"
+                            >
+                            {% if form.phone_number.errors %}
+                                <span class="form-error">{{ form.phone_number.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group order-form-group-full">
+                            <label class="order-form-label" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.address.html_name }}"
+                                id="{{ form.address.id_for_label }}"
+                                value="{{ form.address.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Street, building, apartment"
+                            >
+                            {% if form.address.errors %}
+                                <span class="form-error">{{ form.address.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.city.html_name }}"
+                                id="{{ form.city.id_for_label }}"
+                                value="{{ form.city.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Enter your city"
+                            >
+                            {% if form.city.errors %}
+                                <span class="form-error">{{ form.city.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="order-form-group">
+                            <label class="order-form-label" for="{{ form.postal_code.id_for_label }}">{{ form.postal_code.label }}</label>
+                            <input
+                                type="text"
+                                name="{{ form.postal_code.html_name }}"
+                                id="{{ form.postal_code.id_for_label }}"
+                                value="{{ form.postal_code.value|default_if_none:'' }}"
+                                class="order-form-input"
+                                placeholder="Postal code"
+                            >
+                            {% if form.postal_code.errors %}
+                                <span class="form-error">{{ form.postal_code.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="order-form-footer">
+                        <a href="{% url 'cart:cart_detail' %}" class="order-back-link">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            Back to cart
+                        </a>
+                        <button type="submit" class="order-submit-btn">
+                            Proceed to Payment
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <aside class="order-summary-panel">
+                <div class="order-panel-header">
+                    <h2>Order Summary</h2>
+                    <p>{{ cart|length }} item{{ cart|length|pluralize }} in your bag</p>
+                </div>
+
+                <div class="order-summary-items">
+                    {% for item in cart %}
+                        {% with product=item.product %}
+                            <div class="order-summary-item">
+                                <div class="order-summary-thumb">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    {% else %}
+                                        <img src="{% static 'img/noimage.jpg' %}" alt="{{ product.name }}">
+                                    {% endif %}
+                                </div>
+
+                                <div class="order-summary-info">
+                                    <h4>{{ product.name }}</h4>
+                                    <p>{{ item.size_name }} | {{ item.color_name }}</p>
+                                    <span>Qty: {{ item.quantity }}</span>
+                                </div>
+
+                                <div class="order-summary-price">
+                                    ${{ item.total_price }}
+                                </div>
+                            </div>
+                        {% endwith %}
+                    {% empty %}
+                        <div class="order-empty-state">
+                            Your cart is empty. Add a few products before checkout.
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="order-summary-totals">
+                    <div class="order-summary-line">
+                        <span>Subtotal</span>
+                        <strong>${{ total_price }}</strong>
+                    </div>
+                    <div class="order-summary-line">
+                        <span>Promo Code: </span>
+                        <strong class="order-summary-free">{{ promo.discount }}%</strong>
+                    </div>
+                    <div class="order-summary-line">
+                        <span>Secure processing</span>
+                        <strong>Included</strong>
+                    </div>
+                </div>
+
+                <div class="order-summary-total-box">
+                    <span>Total</span>
+                    <strong>${{ total_price }}</strong>
+                </div>
+
+                <div class="order-summary-note">
+                    <i class="fa-solid fa-shield-heart"></i>
+                    Your payment details are protected and your order summary stays saved for the next step.
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}

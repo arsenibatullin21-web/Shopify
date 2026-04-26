@@ -1,0 +1,164 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<section class="payment-process-page">
+    <div class="container">
+        <div class="breadcrumb-nav payment-process-breadcrumb">
+            <a href="{% url 'main:home' %}">Home</a>
+            <span>/</span>
+            <a href="{% url 'cart:cart_detail' %}">Cart</a>
+            <span>/</span>
+            <span class="current">Payment</span>
+        </div>
+
+        <div class="payment-process-hero">
+            <div class="payment-process-copy">
+                <span class="payment-process-badge">Stripe Checkout</span>
+                <h1 class="payment-process-title">Secure Payment For Your Order</h1>
+                <p class="payment-process-subtitle">
+                    Review your order details one last time and continue to Stripe to complete the payment safely.
+                </p>
+            </div>
+
+            <div class="payment-process-hero-card">
+                <div class="payment-process-hero-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h4>Protected Checkout</h4>
+                    <p>Your payment is processed on Stripe's secure hosted page with encrypted transaction handling.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-process-layout">
+            <div class="payment-process-main">
+                <div class="payment-process-panel">
+                    <div class="payment-process-panel-header">
+                        <h2>Order & Delivery Details</h2>
+                        <p>Make sure everything looks right before we redirect you to Stripe.</p>
+                    </div>
+
+                    <div class="payment-process-customer-grid">
+                        <div class="payment-process-info-card">
+                            <span>Order Number</span>
+                            <strong>#{{ order.id }}</strong>
+                        </div>
+                        <div class="payment-process-info-card">
+                            <span>Email</span>
+                            <strong>{{ order.email }}</strong>
+                        </div>
+                        <div class="payment-process-info-card">
+                            <span>Phone</span>
+                            <strong>{{ order.phone_number }}</strong>
+                        </div>
+                        <div class="payment-process-info-card">
+                            <span>Shipping City</span>
+                            <strong>{{ order.city }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="payment-process-address-card">
+                        <span>Shipping Address</span>
+                        <strong>{{ order.first_name }} {{ order.last_name }}</strong>
+                        <p>{{ order.address }}, {{ order.city }}, {{ order.postal_code }}</p>
+                    </div>
+
+                    <div class="payment-process-features">
+                        <div class="payment-process-feature">
+                            <i class="fa-solid fa-credit-card"></i>
+                            <div>
+                                <h4>Hosted By Stripe</h4>
+                                <p>You will continue to Stripe for the final payment confirmation.</p>
+                            </div>
+                        </div>
+                        <div class="payment-process-feature">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <div>
+                                <h4>Fast Fulfillment</h4>
+                                <p>We will start processing the order as soon as payment is confirmed.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="payment-process-summary">
+                <div class="payment-process-panel payment-process-summary-panel">
+                    <div class="payment-process-panel-header">
+                        <h2>Payment Summary</h2>
+                        <p>{{ order.items.count }} item{{ order.items.count|pluralize }} ready for checkout.</p>
+                    </div>
+
+                    <div class="payment-process-items">
+                        {% for item in order.items.all %}
+                            <article class="payment-process-item">
+                                <div class="payment-process-item-thumb">
+                                    {% if item.product and item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product_name }}">
+                                    {% else %}
+                                        <img src="{% static 'img/noimage.jpg' %}" alt="{{ item.product_name }}">
+                                    {% endif %}
+                                </div>
+
+                                <div class="payment-process-item-info">
+                                    <h4>{{ item.product_name }}</h4>
+                                    <p>Qty: {{ item.quantity }}</p>
+                                    {% if item.size_name or item.color_name %}
+                                        <span>
+                                            {% if item.size_name %}Size: {{ item.size_name }}{% endif %}
+                                            {% if item.size_name and item.color_name %} · {% endif %}
+                                            {% if item.color_name %}Color: {{ item.color_name }}{% endif %}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <strong class="payment-process-item-price">${{ item.price }}</strong>
+                            </article>
+                        {% empty %}
+                            <div class="payment-process-empty">
+                                There are no items in this order yet.
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="payment-process-totals">
+                        <div class="payment-process-total-line">
+                            <span>Order subtotal</span>
+                            <strong>${{ total_price }}</strong>
+                        </div>
+
+                        {% if promo %}
+                            <div class="payment-process-total-line payment-process-total-line-accent">
+                                <span>Promo code</span>
+                                <strong>{{ promo }}</strong>
+                            </div>
+                        {% endif %}
+
+                        <div class="payment-process-total-box">
+                            <span>Total to pay</span>
+                            <strong>${{ total_price }}</strong>
+                        </div>
+                    </div>
+
+                    <form method="post" class="payment-process-form">
+                        {% csrf_token %}
+                        <button type="submit" class="payment-process-submit">
+                            <i class="fa-brands fa-stripe-s"></i>
+                            <span>Continue To Stripe</span>
+                        </button>
+                    </form>
+
+                    <a href="{% url 'orders:create_order' %}" class="payment-process-back-link">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Back to checkout details</span>
+                    </a>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% endblock %}
