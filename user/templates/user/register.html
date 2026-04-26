@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Delete{% endblock %}
+
+
+{% block content %}
+ <section class="apx-add-product-page">
+        <div class="container">
+            <div class="apx-add-product-wrapper">
+                 <div class="apx-add-product-header">
+                    <h1 class="apx-add-product-title">Register</h1>
+                    <p class="apx-add-product-subtitle">
+                        Enter information
+                    </p>
+                </div>
+                <form class="apx-add-product-form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.errors }}
+                    <div class="apx-form-grid">
+                    <div class="apx-form-group apx-form-group-full">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.username.label }}</label>
+                        {{ form.username }}
+                        <div id="user-check"></div>
+                        {% if form.username.errors %}
+                            <span class="error">{{ form.username.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="apx-form-group apx-form-group-full">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        <div id="email-check"></div>
+                        {% if form.email.errors %}
+                            <span class="error">{{ form.email.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="apx-form-group">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.first_name.label }}</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <span class="error">{{ form.first_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="apx-form-group">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.last_name.label }}</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <span class="error">{{ form.last_name.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="apx-form-group">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.password1.label }}</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                            <span class="error">{{ form.password1.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="apx-form-group">
+                        <label for="apxProductPrice" class="apx-form-label">{{ form.password2.label }}</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                            <span class="error">{{ form.password2.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    </div>
+
+                     <div class="mt-3">
+                         <button type="submit" class="apx-btn apx-btn-primary">Register</button>
+                    </div>
+                </form>
+            </div>
+        <div>
+ </section>
+{% endblock %}

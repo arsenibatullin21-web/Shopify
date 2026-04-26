@@ -1,0 +1,118 @@
+{% load static %}
+
+<div class="products-title d-flex justify-content-between">
+                    <h5>showing {{ products.count }} products</h5>
+                    <div>
+                    <span>Sort by:</span>
+                    <select name="sort">
+                        <option value="all" {% if selected_sort == 'all' or not selected_sort %}selected{% endif %}>...</option>
+                        <option value="featured" {% if selected_sort == 'featured' %}selected{% endif %}>Featured</option>
+                        <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="top-rated" {% if selected_sort == 'top-rated' %}selected{% endif %}>Top rated</option>
+                    </select>
+                    </div>
+                </div>
+
+
+<div class="coll-products">
+    <div class="col-cards d-flex flex-row  flex-wrap gap-3">
+                    {% for p in products %}
+                        <div class="col-content" style="margin-bottom: 15px";>
+                            <div class="col-card2">
+                                <a href="{% url 'main:product_detail' p.slug %}">
+    {#                            {% if p.budges %}#}
+    {#                                <div class="card-badges">#}
+    {#                                    <span></span>#}
+    {#                                    <span></span>#}
+    {#                                </div>#}
+    {#                            {% endif %}    #}
+
+                                <img src="{% if p.image %} {{ p.image.url }} {% else %}{% static 'img/noimage.jpg' %}{% endif %}" alt="" class="col-card-img2">
+
+                                <div class="card-actions">
+                                    <button class="btn-cart"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+                                              Add to Cart</button>
+                                    <button class="btn-wishlist">&#9825;</button>
+                                </div>
+                                </a>
+                            </div>
+
+                              <div class="p-info" style="line-height:3px">
+                                <div class="info">
+                                    <p>{{ p.category }}</p>
+                                    <h3>{{ p.name }}</h3>
+                                    <h2>${{ p.price }}</h2>
+                                    <div class="color-options">
+                                        {% for color in p.color.all %}
+                                            <span class="color-dot" style="background: #{{ color.hex_code }};"></span>
+                                        {% endfor %}
+                                    </div>
+                                    <h5>{{ p.size.count }} sizes available</h5>
+                                </div>
+                            </div>
+                        </div>
+                     {% endfor %}
+    </div>
+</div>
+
+<div class="catalog-pagination-shell">
+    <div class="catalog-pagination-copy">
+        <span>Showing curated drops from your catalog</span>
+        <p>Hook these controls to your backend pagination later.</p>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <nav class="catalog-pagination" aria-label="Catalog pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&sort={{ selected_sort }}" class="catalog-page-nav"
+             hx-get="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&sort={{ selected_sort }}"
+           hx-target="#product-results"
+        >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Previous</span>
+        </a>
+    {% else %}
+        <a href="?page=" class="catalog-page-nav disabled" aria-disabled="true">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Previous</span>
+        </a>
+    {% endif %}
+
+        {% for page in page_obj.paginator.page_range %}
+            <div class="catalog-page-numbers">
+                {% if page_obj.number|add:-2 <= page and page <= page_obj.number|add:2 %}
+                    {% if page == page_obj.number %}
+                        <a href="?page={{ page }}&q={{ search_query }}&sort={{ selected_sort }}" class="catalog-page-link active"
+                            hx-get="?page={{ page }}&q={{ search_query }}&sort={{ selected_sort }}"
+                           hx-target="#product-results"
+                        >{{ page }}</a>
+                    {% else %}
+                        <a href="?page={{ page }}&q={{ search_query }}&sort={{ selected_sort }}" class="catalog-page-link"
+                         hx-get="?page={{ page }}&q={{ search_query }}&sort={{ selected_sort }}"
+                           hx-target="#product-results"
+                        >{{ page }}</a>
+
+                    {% endif %}
+                {% endif %}
+
+            </div>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&sort={{ selected_sort }}" class="catalog-page-nav"
+                 hx-get="?page={{ page_obj.next_page_number }}&q={{ search_query }}&sort={{ selected_sort }}"
+               hx-target="#product-results"
+            >
+                <span>Next</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        {% else %}
+            <a href="" class="catalog-page-nav disabled">
+                <span>Next</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+</div>
+

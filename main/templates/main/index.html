@@ -1,0 +1,175 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+    {# HOME   #}
+    <section class="home">
+        <div class="home-content container">
+            <div class="home-title">
+                <p id="p_1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+  <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+</svg> New collection 2032</p>
+                <div class="home-text mb-5">
+                    <h2>Step Into <h2 style="color: #ff6a00; ">Your Best</h2></h2>
+                    <p id="p_2">Premium footwear for every step of your journey. From athletic performance to everyday comfort.</p>
+                </div>
+                <div class="home-btn">
+                    <button class="home-btn1"><a href="{% url 'main:catalog' %}">Shop Now  ></a></button>
+                    <button class="home-btn2"><a href="{% url 'main:category' %}">Browse Categories</a></button>
+                </div>
+                <hr style="opacity: 0.1;" >
+                <div class="home-rating d-flex mt-4">
+                    <div>
+                        <h4>50k+</h4>
+                        <p>Happy Customers</p>
+                    </div>
+                    <div class="vline"></div>
+                    <div>
+                        <h4>4.9 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                          <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                        </svg></h4>
+                        <p>Average Rating</p>
+                    </div>
+                    <div class="vline"></div>
+                    <div>
+                        <h4>300+</h4>
+                        <p>Styles Available</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div>
+                <img src="{% static 'img/banner1.jpg' %}" alt="" class="home-img">
+            </div>
+        </div>
+    </section>
+
+
+    {# CATEGORY     #}
+    <section class="category">
+        <div class="category-content container">
+            <div class="category-title d-flex flex-row justify-content-between align-items-center">
+                <div>
+                    <h2>Shop by Category</h2>
+                    <p>Find the perfect pair for every occasion</p>
+                </div>
+                <div>
+                    <a href="{% url 'main:category' %}" class="view-all">View All ></a>
+                </div>
+            </div>
+
+             <div class="categories">
+                <div class="cat-cards d-flex flex-row justify-content-between flex-wrap gap-3">
+                    {% for category in categories %}
+                        <div class="card">
+                            <a href="{% url 'main:product_by_category' category.slug %}">
+                            <img src="{{ category.image.url }}" alt="" class="card-img">
+                            <div class="text-bg">
+                                <div class="card-text">
+                                    <p id="p_3">{{ category.get_product_length }} products</p>
+                                    <h3>{{category.name}}</h3>
+                                    <p id="p_4">{{category.description}}</p>
+                                    <strong href="">Shop Now   &#8594;</strong>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    {#  COLLECTION  #}
+    <section class="collection">
+        <div class="collection-content container">
+            <div class="category-title d-flex flex-row justify-content-between align-items-center">
+                <div>
+                    <h2>Featured Collection</h2>
+                    <p>Our most popular styles handpicked for you</p>
+                </div>
+                <div>
+                    <a href="#" class="view-all">View All Featured ></a>
+                </div>
+            </div>
+
+            <div class="coll-products">
+                <div class="col-cards d-flex flex-row justify-content-between flex-wrap gap-4">
+                    {% for p in products %}
+                        <div class="col-content" style="margin-bottom: 15px;">
+                            <div class="col-card">
+    {#                            {% if p.budges %}#}
+    {#                                <div class="card-badges">#}
+    {#                                    <span></span>#}
+    {#                                    <span></span>#}
+    {#                                </div>#}
+    {#                            {% endif %}    #}
+
+                                <a href="{% url 'main:product_detail' p.slug %}"><img src="{{ p.image.url }}" alt="" class="col-card-img"></a>
+
+                                <div class="card-actions">
+                                    <button class="btn-cart"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg>
+                                              Add to Cart</button>
+                                    <button class="btn-wishlist">&#9825;</button>
+                                </div>
+                            </div>
+
+                              <div class="p-info" style="line-height:3px">
+                                <div class="info">
+                                    <p>{{ p.category }}</p>
+                                    <a href="{% url 'main:product_detail' p.slug %}" style="color: white"><h3>{{ p.name }}</h3></a>
+                                    <h2>${{ p.price }}</h2>
+                                    <div class="color-options">
+                                        {% for color in p.color.all %}
+                                            <span class="color-dot" style="background: #{{ color.hex_code }};"></span>
+                                        {% endfor %}
+                                    </div>
+                                    <h5>{{ p.size.count }} sizes available</h5>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {#  FEATURES  #}
+    <section class="features">
+        <div class="features container d-flex flex-row justify-content-between">
+                <div id="div_1" class="d-flex flex-row gap-3">
+                    <div class="feature-icons"><i class="fa-solid fa-truck"></i></div>
+                    <div>
+                        <h3>Free Shipping</h3>
+                        <p>Free standard shipping on all orders over $75. Express options available.</p>
+                    </div>
+                </div>
+
+                <div id="div_1" class="d-flex flex-row gap-3"><i class="fa-solid fa-scale-balanced feature-icons"></i>
+                    <div>
+                        <h3>Size Guarantee</h3>
+                        <p>Not the right fit? Exchange for a different size at no extra cost.</p>
+                    </div>
+                </div>
+                <div id="div_1" class="d-flex flex-row gap-3"><i class="fa-solid fa-rotate-left feature-icons"></i>
+                    <div>
+                        <h3>60-Day Returns</h3>
+                        <p>Changed your mind? Return unworn items within 60 days, no questions asked.</p>
+                    </div>
+                </div>
+                <div id="div_1" class="d-flex flex-row gap-3"><i class="fa-solid fa-shield feature-icons"></i>
+                    <div>
+                        <h3>Secure Checkout</h3>
+                        <p>Your payment information is encrypted and secure. Shop with confidence.</p>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+{% endblock %}

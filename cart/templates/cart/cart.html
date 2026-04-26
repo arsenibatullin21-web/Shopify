@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css2/base2.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="stride-cart-wrapper">
+        <div class="stride-cart container">
+            <!-- Breadcrumb Navigation -->
+              <div class="breadcrumb-nav pt-5">
+                  <a href="{% url 'main:home' %}">Home</a>
+                  <span>/</span>
+                  <span class="current">Shopping Cart</span>
+                </div>
+
+            <!-- Page Title -->
+            <h1 class="stride-page-title">Shopping Cart</h1>
+
+            <!-- Main Grid: Cart Items + Order Summary -->
+                <div id="remove-cart">
+                    {% include 'cart/partials/cart_results.html' %}
+                </div>
+
+            <!-- Info Cards Section -->
+            <div class="stride-info-cards-grid mb-5">
+                <div class="stride-info-card">
+                    <span class="stride-info-card-icon">📦</span>
+                    <h3 class="stride-info-card-title">Free Shipping</h3>
+                    <p class="stride-info-card-text">On orders over $75</p>
+                </div>
+                <div class="stride-info-card">
+                    <span class="stride-info-card-icon">↩️</span>
+                    <h3 class="stride-info-card-title">60-Day Returns</h3>
+                    <p class="stride-info-card-text">Easy returns & exchanges</p>
+                </div>
+                <div class="stride-info-card">
+                    <span class="stride-info-card-icon">🔒</span>
+                    <h3 class="stride-info-card-title">Secure Payment</h3>
+                    <p class="stride-info-card-text">SSL encrypted checkout</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

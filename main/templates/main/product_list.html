@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Catalog{% endblock%}
+
+
+
+{% block content %}
+{#  Shop-all title  #}
+    <section class="page-heros">
+      <div class="container">
+        <div class="breadcrumb-nav">
+          <a href="{% url 'main:home' %}">Home</a>
+          <span>/</span>
+          <span class="current">Shop All</span>
+        </div>
+        <h1 class="page-title">Shop All</h1>
+        <p class="page-subtitle">Browse our complete collection of premium footwear</p>
+      </div>
+    </section>
+
+    <section class="catalog">
+        <div class="shop-container">
+            <div class="container" id="catalog-shell">
+                {% include 'main/partials/category_results.html' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,172 @@
+<div class="stride-cart-main-grid">
+                <!-- Left Side: Cart Items -->
+                <div class="stride-cart-items-box">
+                    <!-- Cart Header -->
+                    <div class="stride-cart-items-header">
+                        <div>Product</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div>Total</div>
+                        <div></div>
+                    </div>
+
+                    <!-- Cart Items: -->
+                    {% if cart|length > 0 %}
+                        {% for item in cart %}
+                            {% with product=item.product %}
+                                <div class="stride-cart-item">
+                                    <div class="stride-product-info">
+                                        <div class="stride-product-image"><img src="{{ product.image.url }}" alt="" style="width: 100px; height: 90px"></div>
+                                        <div>
+                                            <div class="stride-product-name">{{product.name}}</div>
+                                            <div class="stride-product-specs">{{ item.size_name}} | Color: {{ item.color_name }}</div>
+                                        </div>
+                                    </div>
+                                    {% if product.discount %}
+                                        <div class="d-flex flex-column">
+                                            <div class="stride-cart-price mb-1">${{ product.get_discount_price }}</div>
+                                            <div class="stride-cart-price" style="text-decoration: line-through">${{ product.price }}</div>
+                                        </div>
+                                    {% else %}
+                                        <div class="stride-cart-price">${{ product.price }}</div>
+                                    {% endif %}
+                                    <div class="stride-quantity-control">
+                                         <form
+                                                 action="{% url 'cart:cart_update_quantity' item.cart_key %}" method="post" style="display:inline;"
+                                                 hx-post="{% url 'cart:cart_update_quantity' item.cart_key %}"
+                                                 hx-target="#remove-cart"
+                                         >
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="decrease">
+                                            <button type="submit" class="stride-quantity-btn">−</button>
+                                        </form>
+
+                                        <div class="stride-quantity-display">{{ item.quantity }}</div>
+
+                                        <form
+                                                hx-post="{% url 'cart:cart_update_quantity' item.cart_key %}"
+                                                hx-target="#remove-cart"
+                                                action="{% url 'cart:cart_update_quantity' item.cart_key %}" method="post" style="display:inline;"
+                                        >
+                                            {% csrf_token %}
+                                            <input type="hidden" name="action" value="increase">
+                                            <button type="submit" class="stride-quantity-btn">+</button>
+                                        </form>
+                                    </div>
+
+                                    <div class="stride-cart-total">${{ item.total_price }}</div>
+
+
+                                   <form   method="post"
+                                           action="{% url 'cart:remove_cart' item.cart_key %}"
+                                           hx-post="{% url 'cart:remove_cart' item.cart_key %}"
+                                           hx-target="#remove-cart"
+                                           hx-swap="innerHTML"
+                                   >
+                                        {% csrf_token %}
+                                        <button type="submit" class="stride-remove-btn">×</button>
+                                    </form>
+                                </div>
+                            {% endwith %}
+                        {% endfor %}
+                    {% endif %}
+
+
+                    <!-- Cart Actions -->
+                    {% if cart|length > 0%}
+                    <div class="stride-cart-actions">
+                        <button class="stride-continue-shopping"><a href="{% url 'main:catalog' %}">← Continue Shopping</a></button>
+                        <form action="{% url 'cart:cart_clear' %}"
+                              hx-post="{% url 'cart:cart_clear' %}"
+                              hx-target="#remove-cart"
+                        >
+                            {% csrf_token %}
+                            <button class="stride-clear-cart">Clear Cart</button>
+                        </form>
+                    </div>
+                    {% else %}
+                        <div class="text-center opacity-25">EMPTY...</div>
+                    {% endif %}
+                </div>
+
+                <!-- Right Side: Order Summary -->
+                <div class="stride-order-summary">
+                    <h2 class="stride-summary-title">Order Summary</h2>
+
+                    <!-- Promo Code Section -->
+                    <div class="stride-promo-section">
+                        <label class="stride-promo-label">Promo Code</label>
+                        <div class="stride-promo-input-group">
+                        {% if cart|length > 0 %}
+                            {% if not promo %}
+                            <form action="{% url 'cart:cart_promo' %}"
+                                  hx-get="{% url 'cart:cart_promo' %}"
+                                  hx-target="#remove-cart"
+                            >
+                                {% csrf_token %}
+                                <input type="text" class="stride-promo-input" placeholder="Enter code" name="promo" value="">
+                                <button class="stride-apply-btn">Apply</button>
+                            </form>
+                            {% else %}
+                                 <form action="{% url 'cart:cart_promo' %}"
+                                       hx-get="{% url 'cart:cart_promo' %}"
+                                       hx-target="#remove-cart"
+                                 >
+                                {% csrf_token %}
+                                <input type="text" class="stride-promo-input" placeholder="{{ promo }}" disabled>
+                                <button class="stride-apply-btn">Remove</button>
+                            </form>
+                            {% endif %}
+                        {% else %}
+                            <input type="text" class="stride-promo-input" placeholder="Cart is empty" name="promo" value="" disabled>
+                            <button class="stride-apply-btn-disabled" disabled>Apply</button>
+                        {% endif %}
+                        </div>
+                        <div class="stride-promo-hint">Try STRIDE25 for 20% off</div>
+                    </div>
+
+                    <!-- Summary Lines -->
+                    <div class="stride-summary-lines">
+                        <div class="stride-summary-line">
+                            <span class="stride-summary-line-label">Subtotal</span>
+                            <span class="stride-summary-line-value">${{ total_price }}</span>
+                        </div>
+                        <div class="stride-summary-line">
+                            <span class="stride-summary-line-label">Shipping</span>
+                            <span class="stride-summary-line-value free">FREE</span>
+                        </div>
+                        <div class="stride-free-shipping-msg">
+                            ✓ You qualify for free shipping!
+                        </div>
+                        <div class="stride-summary-line">
+                            <span class="stride-summary-line-label">Estimated Tax</span>
+                            <span class="stride-summary-line-value">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div class="stride-total-section">
+                        <span class="stride-total-label">Total</span>
+                        <span class="stride-total-amount">${{ total_price }}</span>
+                    </div>
+
+                    <!-- Checkout Button -->
+                    {% if cart|length > 0 %}
+                        <button class="stride-checkout-btn"><a href="{% url 'orders:create_order' %}" >Proceed to Checkout</a></button>
+                    {% else %}
+                         <button class="stride-checkout-btn-disabled" disabled>Proceed to Checkout</button>
+                    {% endif %}
+                    <!-- Secure Badge -->
+                    <div class="stride-secure-badge">
+                        🔒 Secure Checkout
+                    </div>
+
+                    <!-- Payment Methods -->
+                    <div class="stride-payment-methods">
+                        <div class="stride-payment-icon">VISA</div>
+                        <div class="stride-payment-icon">MC</div>
+                        <div class="stride-payment-icon">AMEX</div>
+                        <div class="stride-payment-icon">PAYPAL</div>
+                    </div>
+                </div>
+            </div>

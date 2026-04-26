@@ -1,0 +1,268 @@
+{% extends 'main/base.html' %}
+{% block title %}Detail{% endblock %}
+
+{% block content %}
+<!-- ─────── BREADCRUMB ─────── -->
+<div class="container">
+  <nav class="breadcrumb">
+    <a href="{% url 'main:home' %}">Home</a><span class="sep">/</span>
+    <a href="{% url 'main:catalog' %}">Shop</a><span class="sep">/</span>
+    <a href="{% url 'main:product_by_category' product.category.slug %}">{{ product.category.name }}</a><span class="sep">/</span>
+    <span class="cur">{{ product.name }}</span>
+  </nav>
+</div>
+
+<!-- ─────── PRODUCT HERO ─────── -->
+<section class="product-hero">
+  <div class="container">
+    <div class="product-grid">
+
+      <!-- Gallery -->
+      <div class="gallery">
+        <div class="gallery-main">
+          <div class="badge-group">
+            <span class="badge badge-sale">-25%</span>
+            <span class="badge badge-best">Bestseller</span>
+          </div>
+          <img id="mainImg"
+               src="{{ product.image.url }}"
+               alt="Velocity Runner Pro"/>
+        </div>
+        <div class="gallery-thumbs">
+          <div class="thumb active" onclick="switchImg(this,'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=80')">
+            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&q=80" alt=""/>
+          </div>
+          <div class="thumb" onclick="switchImg(this,'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=700&q=80')">
+            <img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=200&q=80" alt=""/>
+          </div>
+          <div class="thumb" onclick="switchImg(this,'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=700&q=80')">
+            <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=200&q=80" alt=""/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+
+        <div class="info-top">
+          <span class="cat-tag">{{ product.category.name }}</span>
+          <div class="rating-row">
+            <span class="stars">★★★★☆</span>
+            <span>{{ product.rating }} (182 reviews)</span>
+          </div>
+        </div>
+
+        <h1 class="product-name">{{ product.name }}</h1>
+
+        <p class="product-desc">
+         {{ product.description }}
+        </p>
+
+        <div class="price-row">
+            {% if product.discount %}
+                <span class="price-now">${{ product.get_discount_price }}</span>
+                <span class="price-old">${{ product.price }}</span>
+                <span class="price-save">Save ${{ product.discount }}</span>
+            {% else %}
+                <span class="price-now">${{ product.price }}</span>
+            {% endif %}
+        </div>
+
+
+        <div>
+            <form action="{% url 'cart:cart_add' product.id %}" class="" method="post"
+                hx-post="{% url 'cart:cart_add' product.id %}"
+                  hx-target="#cart-add"
+                  hx-indicator="#add-btn"
+            >
+                {% csrf_token %}
+                <div>
+                  <div class="option-label">Color: <span id="colorName"></span></div>
+                  <div class="color-swatches">
+                      {% for color in product.color.all %}
+                        <label class="color-option">
+                            <input type="radio" name="color" value="{{ color.id }}" hidden required>
+                            <span class="color-circle" style="background: #{{ color.hex_code }}"></span>
+                        </label>
+                      {% endfor %}
+                  </div>
+                </div>
+
+
+        <!-- Size -->
+            <div>
+              <div class="size-header mt-3">
+                <div class="option-label">Select Size</div>
+                <span class="size-guide">Size Guide ↗</span>
+              </div>
+
+              <div class="sizes">
+                  {% for size in sizes %}
+                      {% if size in product.size.all %}
+                           <label class="size-btn-wrap">
+                               <input type="radio" name="size" value="{{ size.id }}" class="size-input" hidden required>
+                               <span class="size-btn">{{ size.size }}</span>
+                            </label>
+{#                        <button class="size-btn " onclick="pickSize(this)">{{ size.size }}</button>#}
+{#                      {% else %}#}
+{#                           <button class="size-btn unavail" disabled>{{ size.size }}</button>#}
+                      {% else %}
+                          <span class="size-btn unavail">{{ size.size }}</span>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+            </div>
+
+                <div class="mb-3 mt-3">
+                    <label>Quantity:</label>
+                    {{ cart_add_form.quantity }}
+                </div>
+
+                <div class="cta-row">
+                  <button class="btn-addcart {% if product.size.all.count == 0 %}disabled-btn-addcard{% endif %}" id="add-btn" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                      <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                      <span class="btn-label">Add to Cart</span>
+                      <span class="btn-loading">Adding...</span>
+                  </button>
+                  <button class="btn-wish" title="Wishlist">♡</button>
+                </div>
+            </form>
+        <div id="cart-toast-container"></div>
+
+        </div>
+        <!-- CTA -->
+      <div class="d-flex justify-content-evenly">
+          <button class="home-btn1 mt-2"><a href="{% url 'main:update_game' product.slug %}">Update product</a></button>
+          <button class="home-btn1 mt-2"><a href="{% url 'main:delete_game' product.slug %}">Delete Product</a></button>
+      </div>
+        <!-- Perks -->
+        <div class="perks">
+          <div class="perk">
+            <span class="perk-icon">🚚</span>
+            <div>
+              <h5>Free Shipping</h5>
+              <p>On orders over $75</p>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">↩️</span>
+            <div>
+              <h5>60-Day Returns</h5>
+              <p>Try in store</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product details -->
+        <div class="details-block">
+          <h4>Product Details</h4>
+          <ul class="feature-list">
+            <li>Responsive foam midsole for maximum energy return</li>
+            <li>Breathable engineered mesh upper</li>
+            <li>Durable rubber outsole with multi-directional traction</li>
+            <li>Reflective details for low-light visibility</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────── REVIEWS ─────── -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Customer Reviews</h2>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="reviewer">
+          <div class="avatar">M</div>
+          <div>
+            <div class="reviewer-name">Mike S. <span class="verified">✓ Verified</span></div>
+            <div class="reviewer-meta">Jan 12, 2025</div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"These are hands down the best running shoes I have ever owned. The cushioning is incredible and they feel so light on my feet."</p>
+      </div>
+
+      <div class="review-card">
+        <div class="reviewer">
+          <div class="avatar" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">A</div>
+          <div>
+            <div class="reviewer-name">Alex T. <span class="verified">✓ Verified</span></div>
+            <div class="reviewer-meta">Feb 3, 2025</div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">"Perfect for my morning runs. The fit is true to size and the color is exactly as pictured. Shipping was super fast too!"</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────── YOU MAY ALSO LIKE ─────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title" style="margin-bottom:0">You May Also Like</h2>
+      <a href="{% url 'main:catalog' %}" class="view-all-link">View All →</a>
+    </div>
+    <div class="related-grid">
+        {% for p in product.category.products.all|slice:":3" %}
+      <div class="rel-card">
+        <div class="rel-img-wrap">
+          <span class="badge badge-new" style="position:absolute;top:12px;left:12px;z-index:1">NEW</span>
+          <img src="{{ p.image.url }}" alt="{{ p.name }}"/>
+        </div>
+        <div class="rel-body">
+          <p class="rel-cat">{{ p.category.name }}</p>
+          <h3 class="rel-name">Marathon Elite</h3>
+          <div class="rel-foot">
+            <span class="rel-price">${{ p.price }}</span>
+            <div class="rel-stars">★★★★★ <span>{{ p.rating }}</span></div>
+          </div>
+        </div>
+      </div>
+        {% endfor %}
+
+
+
+
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+  function switchImg(el, src) {
+    document.getElementById('mainImg').src = src;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function pickColor(el, name) {
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('colorName').textContent = name;
+  }
+
+  function pickSize(el) {
+    document.querySelectorAll('.size-btn:not(.unavail)').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+ document.addEventListener('DOMContentLoaded', function() {
+  const activeSwatch = document.querySelector('.swatch.active');
+  if (activeSwatch) {
+    document.getElementById('colorName').textContent = activeSwatch.title;
+  }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Category{% endblock%}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+<!-- BREADCRUMB + HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb-nav">
+      <a href="{% url 'main:home' %}">Home</a>
+      <span>/</span>
+      <span class="current">Categories</span>
+    </div>
+    <h1 class="page-title">Shop by Category</h1>
+    <p class="page-subtitle">Find the perfect shoes for every occasion and activity</p>
+  </div>
+</section>
+
+<!-- CATEGORY GRID -->
+<section class="categories-section">
+  <div class="container2">
+    <div class="category-grid">
+
+      <!-- Big card - Running -->
+        {% for cat in categories %}
+            {% if cat.name == 'Running' %}
+                <div class="cat-card cat-big">
+                    <a href="{% url 'main:product_by_category' cat.slug %}">
+                            <img src="{{ cat.image.url }}" alt="Running">
+                        <div class="cat-overlay"></div>
+                        <div class="cat-info">
+                          <span class="cat-count">{{ cat.get_product_length }} products</span>
+                          <h2 class="cat-name">{{ cat.name }}</h2>
+                          <p class="cat-desc">{{ cat.description }}</p>
+                          <a href="{% url 'main:catalog' %}" class="cat-link">Shop Now →</a>
+                        </div>
+                    </a>
+              </div>
+            {% endif %}
+        {% endfor %}
+
+      <!-- Right column: 2 medium cards -->
+       <div class="cat-col-right">
+        {% for cat in categories|slice:":2" %}
+            <div class="cat-card cat-medium">
+                <a href="{% url 'main:product_by_category' cat.slug %}">
+              <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+              <div class="cat-overlay"></div>
+              <div class="cat-info">
+                <span class="cat-count">{{ cat.get_product_length }} products</span>
+                <h2 class="cat-name">{{ cat.name }}</h2>
+                <p class="cat-desc">{{ cat.description }}</p>
+                <a href="{% url 'main:catalog' %}" class="cat-link">Shop Now →</a>
+              </div>
+                    </a>
+        </div>
+        {% endfor %}
+        </div>
+
+      <!-- Bottom row: 3 small cards -->
+     {% for cat in categories|slice:"2:" %}
+         {% if cat.name != 'Running' %}
+              <div class="cat-card cat-small">
+                  <a href="{% url 'main:product_by_category' cat.slug %}">
+                <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                <div class="cat-overlay"></div>
+                <div class="cat-info">
+                  <span class="cat-count">{{ cat.get_product_length }} products</span>
+                  <h2 class="cat-name">{{ cat.name }}</h2>
+                  <p class="cat-desc">{{ cat.description }}</p>
+                  <a href="{% url 'main:catalog' %}" class="cat-link">Shop Now →</a>
+                </div>
+                      </a>
+              </div>
+         {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CAN'T DECIDE BANNER -->
+<section class="cant-decide">
+  <div class="container cant-decide-inner">
+    <div>
+      <h2>Can't decide?</h2>
+      <p>Browse all our products or check out our bestsellers</p>
+    </div>
+    <div class="cant-decide-btns">
+      <a href="{% url 'main:catalog' %}" class="btn-primary">Shop All →</a>
+      <a href="#" class="btn-secondary">View Sale Items</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

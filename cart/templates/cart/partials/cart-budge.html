@@ -1,0 +1,9 @@
+
+<i class="fa-solid fa-bag-shopping"></i>
+                      {% with cart_quantity=cart|length%}
+                        {% if cart_quantity > 0 %}
+                            <span class="cart-badge">{{cart_quantity}}</span>
+                        {% else %}
+                             <span class="cart-badge">0</span>
+                        {% endif %}
+                      {% endwith %}

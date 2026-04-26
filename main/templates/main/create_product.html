@@ -1,0 +1,114 @@
+{% extends 'main/base.html' %}
+{% block title %}Add Game{% endblock %}
+
+{% block content %}
+    <section class="apx-add-product-page">
+        <div class="container">
+            <div class="apx-add-product-wrapper">
+                <div class="apx-add-product-header">
+                    <span class="apx-add-product-badge">Admin Panel</span>
+                    <h1 class="apx-add-product-title">{{ title }}</h1>
+                    <p class="apx-add-product-subtitle">
+                        {{ text }}
+                    </p>
+                </div>
+
+                <form class="apx-add-product-form" method="post" enctype="multipart/form-data">
+                    <div> {{ form.non_field_errors}}</div>
+                    {{ form.errors }}
+                    {% csrf_token %}
+                    <div class="apx-form-grid">
+
+                        <div class="apx-form-group apx-form-group-full">
+                            <label for="apxProductName" class="apx-form-label">{{ form.name.label }}</label>
+                            {{ form.name }}
+                             {% if form.name.errors %}
+                              <span class="error">{{ form.name.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductCategory" class="apx-form-label">{{ form.category.label }}</label>
+                            {{ form.category }}
+                             {% if form.category.errors %}
+                              <span class="error">{{ form.category.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                         <div class="apx-form-group">
+                            <label for="apxProductColor" class="apx-form-label">{{ form.discount.label }}</label>
+                            {{ form.discount }}
+                             <div>{{ form.discount.errors }}</div>
+                             {% if form.discount.errors %}
+                              <span class="error">{{ form.discount.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductPrice" class="apx-form-label">{{ form.price.label }} ($)</label>
+                            {{ form.price }}
+                             {% if form.price.errors %}
+                              <span class="error">{{ form.price.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductOldPrice" class="apx-form-label">{{ form.rating.label }}</label>
+                            {{ form.rating }}
+                             {% if form.rating.errors %}
+                              <span class="error">{{ form.rating.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductStock" class="apx-form-label">{{ form.quantity.label }}</label>
+                            {{ form.quantity }}
+                             {% if form.quantity.errors %}
+                              <span class="error">{{ form.quantity.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductSize" class="apx-form-label">{{ form.size.label }}</label>
+                            {{ form.size }}
+                             {% if form.size.errors %}
+                              <span class="error">{{ form.size.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductColor" class="apx-form-label">{{ form.color.label }}</label>
+                            {{ form.color }}
+                             {% if form.color.errors %}
+                              <span class="error">{{ form.color.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group">
+                            <label for="apxProductImage" class="apx-form-label">{{ form.image.label }}</label>
+                            {{ form.image }}
+                             {% if form.image.errors %}
+                              <span class="error">{{ form.image.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="apx-form-group apx-form-group-full">
+                            <label for="apxProductDescription" class="apx-form-label">{{ form.description.label }}</label>
+                            {{ form.description }}
+                             {% if form.description.errors %}
+                              <span class="error">{{ form.description.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="apx-form-actions">
+                        <button type="reset" class="apx-btn apx-btn-secondary">Reset</button>
+                        <button type="submit" class="apx-btn apx-btn-primary">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

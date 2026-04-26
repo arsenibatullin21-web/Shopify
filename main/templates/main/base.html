@@ -1,0 +1,202 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'bootstrap\css\bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container">
+              <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'main:home' %}">
+                <div class="brand-box">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+                <span>Shopify</span>
+              </a>
+
+              <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+              >
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto">
+                  <li class="nav-item"><a class="nav-link {% if 'catalog' in request.path %}curr{% endif %}" href="{% url 'main:catalog' %}">Shop</a></li>
+                  <li class="nav-item"><a class="nav-link {% if 'category' in request.path %}curr{% endif %}" href="{% url 'main:category' %}">Categories</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">New Arrivals</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Sale</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+                </ul>
+
+                <div class="d-flex align-items-center navbar-icons">
+                  <a href="#" class="icon-link"><i class="fa-solid fa-magnifying-glass"></i></a>
+                  <a href="#" class="icon-link"><i class="fa-regular fa-sun"></i></a>
+                  <a href="#" class="icon-link"><i class="fa-regular fa-heart"></i></a>
+                  <a id="cart-add" href="{% url 'cart:cart_detail' %}" class="icon-link">
+                    {% include 'cart/partials/cart-budge.html' %}
+                  </a>
+                <div class="d-flex navbar" style="margin-left: 10px;">
+                    {% if user.is_authenticated %}
+                    	<a href="#" class="nav-link">{{user.username}}</a>|<a href="{% url 'user:logout' %}" class="nav-link">Logout</a>
+                    {% else %}
+                        <a href="{% url 'user:login' %}" class="nav-link">Login</a>
+                    {% endif %}
+                </div>
+
+                </div>
+              </div>
+            </div>
+        </nav>
+
+    </header>
+
+        {% block content %}
+        {% endblock %}
+
+
+
+
+     <!-- Newsletter Section -->
+      <section class="newsletter">
+        <div class="container">
+          <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+              <h2>Join the Stride Club</h2>
+              <p>Get 15% off your first order, plus early access to new drops.</p>
+            </div>
+            <div class="col-lg-6">
+              <form class="d-flex gap-3 flex-column flex-md-row">
+                <input type="email" class="form-control" placeholder="Enter your email">
+                <button class="btn btn-subscribe" type="submit">Subscribe</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+   <footer class="footer-main">
+    <div class="container">
+      <div class="row gy-5">
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-3">
+            <div class="brand-box">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="footer-logo-text">Stride</div>
+          </div>
+
+          <p class="footer-desc">
+            Premium footwear for every step of your journey. From athletic performance
+            to everyday comfort.
+          </p>
+
+          <div class="social-icons">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-6">
+          <h5 class="footer-title">Shop</h5>
+          <div class="footer-links">
+            <a href="#">Running</a>
+            <a href="#">Sneakers</a>
+            <a href="#">Basketball</a>
+            <a href="#">Casual</a>
+            <a href="#">Boots</a>
+            <a href="#">Sandals</a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-title">Help</h5>
+          <div class="footer-links">
+            <a href="#">FAQ</a>
+            <a href="#">Shipping & Returns</a>
+            <a href="#">Size Guide</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Track Order</a>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+          <h5 class="footer-title">About</h5>
+          <div class="footer-links">
+            <a href="#">Our Story</a>
+            <a href="#">Sustainability</a>
+            <a href="#">Athletes</a>
+            <a href="#">Careers</a>
+            <a href="#">Store Locator</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <p>© 2026 Stride. All rights reserved.</p>
+
+        <div class="d-flex align-items-center gap-4">
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+          <div class="payment-icons">
+            <span>VISA</span>
+            <span>Mastercard</span>
+            <span>AMEX</span>
+            <span>Pay</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+<div id="cart-toast-container" class="cart-toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function autoHideCartToast() {
+    const toast = document.getElementById('cart-toast');
+    const container = document.getElementById('cart-toast-container');
+
+    if (!toast || !container) return;
+
+    clearTimeout(window.cartToastTimer);
+
+    window.cartToastTimer = setTimeout(() => {
+      toast.classList.add('hide');
+
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 300);
+    }, 2000);
+  }
+
+  document.addEventListener('DOMContentLoaded', autoHideCartToast);
+  document.body.addEventListener('htmx:afterSettle', autoHideCartToast);
+</script>
+
+</body>
+</html>
